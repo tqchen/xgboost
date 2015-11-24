@@ -1,5 +1,9 @@
+ifndef CC
 export CC  = $(if $(shell which gcc-5),gcc-5,gcc)
+endif
+ifndef CXX
 export CXX = $(if $(shell which g++-5),g++-5,g++)
+endif
 
 export MPICXX = mpicxx
 export LDFLAGS= -pthread -lm
