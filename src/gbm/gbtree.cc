@@ -5,6 +5,7 @@
  * \author Tianqi Chen
  */
 #include <dmlc/omp.h>
+#include <dmlc/timer.h>
 #include <dmlc/parameter.h>
 #include <xgboost/logging.h>
 #include <xgboost/gbm.h>
@@ -281,6 +282,17 @@ class GBTree : public GradientBooster {
       dump.push_back(trees[i]->Dump2Text(fmap, option & 1));
     }
     return dump;
+  }
+
+  Predictor* CreatePredictor(float base_margin) const override {
+    std::vector<const RegTree*> mytree;
+    // donot support multi class for now
+    if (mparam.num_output_group != 1) return nullptr;
+
+    for (size_t i = 0; i < trees.size(); ++i) {
+      mytree.push_back(trees[i].get());
+    }
+    return Predictor::Create(mytree, base_margin);
   }
 
  protected:

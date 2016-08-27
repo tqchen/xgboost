@@ -307,7 +307,16 @@ void CLIPredict(const CLIParam& param) {
     LOG(CONSOLE) << "start prediction...";
   }
   std::vector<float> preds;
-  learner->Predict(dtest.get(), param.pred_margin, &preds, param.ntree_limit);
+  if (param.pred_margin && param.ntree_limit == 0) {
+    std::unique_ptr<Predictor> predictor(learner->CreatePredictor());
+    if (predictor.get() != nullptr) {
+      predictor->PredictMargin(dtest.get(), &preds);
+    } else {
+      learner->Predict(dtest.get(), param.pred_margin, &preds, param.ntree_limit);
+    }
+  } else {
+    learner->Predict(dtest.get(), param.pred_margin, &preds, param.ntree_limit);
+  }
   if (param.silent == 0) {
     LOG(CONSOLE) << "writing prediction to " << param.name_pred;
   }

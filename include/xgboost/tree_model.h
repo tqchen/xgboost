@@ -419,6 +419,8 @@ class RegTree: public TreeModel<bst_float, RTreeNodeStat> {
    */
   struct FVec {
    public:
+    /*! \return the size of the vector */
+    inline size_t Size() const;
     /*!
      * \brief initialize the vector with size vector
      * \param size The size of the feature vector.
@@ -446,8 +448,6 @@ class RegTree: public TreeModel<bst_float, RTreeNodeStat> {
      * \return whether i-th value is missing.
      */
     inline bool is_missing(size_t i) const;
-
-   private:
     /*!
      * \brief a union value of value and flag
      *  when flag == -1, this indicate the value is missing
@@ -494,6 +494,10 @@ inline void RegTree::FVec::Init(size_t size) {
   Entry e; e.flag = -1;
   data.resize(size);
   std::fill(data.begin(), data.end(), e);
+}
+
+inline size_t RegTree::FVec::Size() const {
+  return data.size();
 }
 
 inline void RegTree::FVec::Fill(const RowBatch::Inst& inst) {

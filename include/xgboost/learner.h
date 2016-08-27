@@ -147,6 +147,11 @@ class Learner : public rabit::Serializable {
    */
   std::vector<std::string> Dump2Text(const FeatureMap& fmap, int option) const;
   /*!
+   * \brief create a predictor with given base margin for faster prediction.
+   * \return a created predictor, can be nullptr if predictor cannot be created.
+   */
+  Predictor* CreatePredictor() const;
+  /*!
    * \brief online prediction function, predict score for one instance at a time
    *  NOTE: use the batch prediction interface if possible, batch prediction is usually
    *        more efficient than online prediction

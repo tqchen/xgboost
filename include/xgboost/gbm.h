@@ -18,6 +18,7 @@
 #include "./data.h"
 #include "./objective.h"
 #include "./feature_map.h"
+#include "./predictor.h"
 
 namespace xgboost {
 /*!
@@ -114,6 +115,14 @@ class GradientBooster {
    * \return a vector of dump for boosters.
    */
   virtual std::vector<std::string> Dump2Text(const FeatureMap& fmap, int option) const = 0;
+  /*!
+   * \brief create a predictor with given base margin for faster prediction.
+   * \param base_margin the base_margin used in predictor.
+   * \return a created predictor, can be nullptr if predictor cannot be created.
+   */
+  virtual Predictor* CreatePredictor(float base_margin) const {
+    return nullptr;
+  }
   /*!
    * \brief create a gradient booster from given name
    * \param name name of gradient booster

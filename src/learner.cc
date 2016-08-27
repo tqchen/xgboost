@@ -29,6 +29,9 @@ Learner::Dump2Text(const FeatureMap& fmap, int option) const {
   return gbm_->Dump2Text(fmap, option);
 }
 
+Predictor* Learner::CreatePredictor() const {
+  return gbm_->CreatePredictor(base_score_);
+}
 
 /*! \brief training parameter for regression */
 struct LearnerModelParam
