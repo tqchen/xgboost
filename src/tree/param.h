@@ -251,7 +251,7 @@ XGB_DEVICE inline T CalcWeight(const TrainingParams &p, T sum_grad,
 }
 
 /*! \brief core statistics used for tree construction */
-struct GradStats {
+struct alignas(16) GradStats {
   /*! \brief sum gradient statistics */
   double sum_grad;
   /*! \brief sum hessian statistics */
@@ -292,7 +292,10 @@ struct GradStats {
     return xgboost::tree::CalcGain(param, sum_grad, sum_hess);
   }
   /*! \brief add statistics to the data */
-  inline void Add(const GradStats &b) { this->Add(b.sum_grad, b.sum_hess); }
+  inline void Add(const GradStats &b) {
+    sum_grad += b.sum_grad;
+    sum_hess += b.sum_hess;
+  }
   /*! \brief same as add, reduce is used in All Reduce */
   inline static void Reduce(GradStats &a, const GradStats &b) { // NOLINT(*)
     a.Add(b);
