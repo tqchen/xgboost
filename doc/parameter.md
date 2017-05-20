@@ -95,6 +95,11 @@ Parameters for Tree Booster
     - 'default': the normal boosting process which creates new trees.
     - 'update': starts from an existing model and only updates its trees. In each boosting iteration, a tree from the initial model is taken, a specified sequence of updater plugins is run for that tree, and a modified tree is added to the new model. The new model would have either the same or smaller number of trees, depending on the number of boosting iteratons performed. Currently, the following built-in updater plugins could be meaningfully used with this process type: 'refresh', 'prune'. With 'update', one cannot use updater plugins that create new nrees.
 
+* early_stopping_round, [default=0]
+  - The model will train until the validation score stops improving. If you have a validation set, you can use early stopping to find the optimal number of boosting rounds. Early stopping requires at least one evaluation in eval_metric. If there's more than one, it will be used for all, not just for the last one, which is diffrent from the usage in Python-package.
+    - 0: means normal mode, won't early stop during training
+    - n: training will stop if validation error didn't decrease at least every n round. (where n > 0)
+
 Additional parameters for Dart Booster
 --------------------------------------
 * sample_type [default="uniform"]
@@ -184,15 +189,15 @@ Command Line Parameters
 -----------------------
 The following parameters are only used in the console version of xgboost
 * use_buffer [ default=1 ]
- -  Whether to create a binary buffer from text input. Doing so normally will speed up loading times
+  - Whether to create a binary buffer from text input. Doing so normally will speed up loading times
 * num_round
- - The number of rounds for boosting
+  - The number of rounds for boosting
 * data
   - The path of training data
 * test:data
   - The path of test data to do prediction
 * save_period [default=0]
- - the period to save the model, setting save_period=10 means that for every 10 rounds XGBoost will save the model, setting it to 0 means not saving any model during the training.
+  - the period to save the model, setting save_period=10 means that for every 10 rounds XGBoost will save the model, setting it to 0 means not saving any model during the training.
 * task [default=train] options: train, pred, eval, dump
   - train: training using data
   - pred: making prediction for test:data
